@@ -81,28 +81,12 @@ header {
   gap: 40px;
   align-items: end;
 }
-.eyebrow {
-  color: var(--green);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-weight: 750;
-}
 h1 {
   font-size: clamp(34px, 4.5vw, 64px);
   line-height: 1.05;
   letter-spacing: -0.055em;
-  margin: 18px 0 20px;
-  font-weight: 650;
-}
-h1 span {
-  color: var(--green);
-}
-.intro {
-  color: var(--muted);
-  max-width: 600px;
-  font-size: 16px;
   margin: 0;
+  font-weight: 650;
 }
 .stats {
   display: flex;
@@ -696,9 +680,6 @@ select,
   background: var(--soft);
   color: var(--green);
   border-color: #62866c;
-}
-.post-button {
-  font-size: 11px;
 }
 .card-media {
   margin: -18px -23px 17px;

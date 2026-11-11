@@ -12,10 +12,10 @@
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self' https://telegram.org; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; img-src 'self'; form-action 'none'"
     />
-    <link rel="stylesheet" href="catalog.css" />
+    <link rel="stylesheet" href="catalog.css?v=2" />
     <script defer src="https://telegram.org/js/telegram-web-app.js?65"></script>
     <script defer src="telegram.js"></script>
-    <script defer src="catalog.js"></script>
+    <script defer src="catalog.js?v=2"></script>
   </head>
   <body>
     <header>
@@ -38,15 +38,7 @@
     </header>
     <main class="wrap">
       <section class="hero">
-        <div>
-          <div class="eyebrow">Scripts / JSFX / Extensions</div>
-          <h1>Меньше поиска.<br /><span>Больше музыки.</span></h1>
-          <p class="intro">
-            Скрипты, эффекты и расширения REAPER. Изучайте инструменты,
-            сохраняйте изображения и используйте новые описания для своих
-            публикаций.
-          </p>
-        </div>
+        <h1>Scripts / JSFX / Extensions</h1>
         <div class="stats" id="stats"></div>
       </section>
       <div
@@ -154,33 +146,6 @@
         <span id="snapshotDate">Каталог REAPER</span>
       </div>
     </footer>
-    <dialog id="postDialog" aria-labelledby="postTitle">
-      <div class="dialog-head">
-        <h2 id="postTitle"></h2>
-        <button
-          class="dialog-close"
-          data-close="postDialog"
-          aria-label="Закрыть текст"
-        >
-          ×
-        </button>
-      </div>
-      <div class="dialog-body">
-        <p>
-          Новая редакционная версия. Текст можно изменить перед копированием;
-          изменения в этом окне не сохраняются после закрытия страницы.
-        </p>
-        <textarea
-          id="postText"
-          aria-label="Текст для публикации"
-          spellcheck="true"
-        ></textarea>
-        <div class="dialog-actions">
-          <button class="action accent" id="copyText">Копировать текст</button
-          ><button class="action" id="downloadText">↓ Скачать TXT</button>
-        </div>
-      </div>
-    </dialog>
     <dialog id="imageDialog" class="image-dialog" aria-labelledby="imageTitle">
       <div class="dialog-head">
         <h2 id="imageTitle"></h2>

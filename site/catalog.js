@@ -122,7 +122,7 @@ function startCatalog(D) {
   }
   function cardHTML(x) {
     const seen = !!reviewed[x.url];
-    return `<article class="card ${seen ? "viewed" : ""}" data-entry="${esc(x.key)}">${mediaHTML(x)}<span class="tag">${esc(x.category)}</span><h2><a class="main-link" href="${hrefFor(x.url)}" target="_blank" rel="noopener noreferrer">${esc(x.name)} <span class="arrow" aria-hidden="true">↗</span></a></h2><p>${esc(x.description)}</p><div class="card-bottom"><span>${x.author ? `${state.view === "items" ? "Автор темы" : "Источник"}: <span class="author-name">${esc(x.author)}</span>` : "Автор не указан в источнике"}</span><span>${esc(x.kind)}</span></div><div class="card-actions"><button class="action mark" data-action="mark" data-key="${esc(x.key)}" aria-pressed="${seen}">${seen ? "✓ Просмотрено" : "○ Отметить просмотренным"}</button><button class="action post-button" data-action="post" data-key="${esc(x.key)}">Текст для поста</button></div></article>`;
+    return `<article class="card ${seen ? "viewed" : ""}" data-entry="${esc(x.key)}">${mediaHTML(x)}<span class="tag">${esc(x.category)}</span><h2><a class="main-link" href="${hrefFor(x.url)}" target="_blank" rel="noopener noreferrer">${esc(x.name)} <span class="arrow" aria-hidden="true">↗</span></a></h2><p>${esc(x.description)}</p><div class="card-bottom"><span>${x.author ? `${state.view === "items" ? "Автор темы" : "Источник"}: <span class="author-name">${esc(x.author)}</span>` : "Автор не указан в источнике"}</span><span>${esc(x.kind)}</span></div><div class="card-actions"><button class="action mark" data-action="mark" data-key="${esc(x.key)}" aria-pressed="${seen}">${seen ? "✓ Просмотрено" : "○ Отметить просмотренным"}</button></div></article>`;
   }
   function render() {
     const isAuthor = state.view === "authors";
@@ -217,20 +217,7 @@ function startCatalog(D) {
       filename(x) + "-" + ((positions[x.key] || 0) + 1) + ".png",
     );
   }
-  function postText(x) {
-    const author = x.author
-      ? `\n${x.key.startsWith("i:") ? "Автор темы на форуме" : "Источник"}: ${x.author}`
-      : "";
-    return `${x.name}\n\n${x.description}${author}\n${x.authorUrl ? "Профиль: " + x.authorUrl + "\n" : ""}\nПодробнее: ${x.url}`;
-  }
-  let activePost = null,
-    activeImage = null;
-  function showPost(x) {
-    activePost = x;
-    $("postTitle").textContent = x.name;
-    $("postText").value = postText(x);
-    miniApp.openDialog($("postDialog"));
-  }
+  let activeImage = null;
   function fillImage() {
     const x = activeImage,
       m = currentImage(x);
@@ -264,8 +251,7 @@ function startCatalog(D) {
       else reviewed[x.url] = true;
       saveReview();
       render();
-    } else if (action === "post") showPost(x);
-    else if (action === "image") showImage(x);
+    } else if (action === "image") showImage(x);
     else if (action === "download-image") downloadImage(x);
     else if (action === "prev" || action === "next") {
       positions[x.key] =
@@ -297,18 +283,6 @@ function startCatalog(D) {
     toast("Скопируйте выделенный текст");
   }
 
-  $("copyText").addEventListener("click", () =>
-    copyField($("postText"), "Текст скопирован"),
-  );
-  $("downloadText").addEventListener("click", () => {
-    if (activePost)
-      downloadBlob(
-        new Blob(["\ufeff" + $("postText").value], {
-          type: "text/plain;charset=utf-8",
-        }),
-        filename(activePost) + ".txt",
-      );
-  });
   $("downloadFullImage").addEventListener("click", () => {
     if (activeImage) downloadImage(activeImage);
   });
