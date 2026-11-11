@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <title>REAPER — каталог скриптов и авторов</title>
+    <meta name="referrer" content="no-referrer" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://telegram.org; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; img-src 'self'; form-action 'none'"
+    />
+    <link rel="stylesheet" href="catalog.css" />
+    <script defer src="https://telegram.org/js/telegram-web-app.js?65"></script>
+    <script defer src="telegram.js"></script>
+    <script defer src="catalog.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="wrap top">
+        <div class="brand">
+          <span class="logo" aria-hidden="true">≋</span> REAPER
+          <span class="brand-suffix">/ LIBRARY</span>
+        </div>
+        <div class="top-actions">
+          <div class="edition">Коллекция сообщества · 2026</div>
+          <button
+            class="action"
+            id="theme"
+            aria-label="Переключить цветовую тему"
+          >
+            ☀ Светлая тема
+          </button>
+        </div>
+      </div>
+    </header>
+    <main class="wrap">
+      <section class="hero">
+        <div>
+          <div class="eyebrow">Scripts / JSFX / Extensions</div>
+          <h1>Меньше поиска.<br /><span>Больше музыки.</span></h1>
+          <p class="intro">
+            Скрипты, эффекты и расширения REAPER. Изучайте инструменты,
+            сохраняйте изображения и используйте новые описания для своих
+            публикаций.
+          </p>
+        </div>
+        <div class="stats" id="stats"></div>
+      </section>
+      <div
+        id="catalogStatus"
+        class="notice catalog-status"
+        role="status"
+        aria-live="polite"
+      >
+        <span id="catalogStatusText">Загружаем каталог…</span>
+        <button class="action hidden" id="retryCatalog">Повторить</button>
+      </div>
+      <div id="catalogContent" class="hidden">
+        <nav class="tabs" aria-label="Разделы каталога">
+          <button class="tab active" data-view="items">
+            Скрипты и темы <span class="badge" id="countItems"></span></button
+          ><button class="tab" data-view="authors">
+            Авторы <span class="badge" id="countAuthors"></span></button
+          ><button class="tab" data-view="resources">
+            Другие источники <span class="badge" id="countResources"></span>
+          </button>
+        </nav>
+        <div class="tools">
+          <div class="search">
+            <span aria-hidden="true">⌕</span
+            ><input
+              id="search"
+              type="search"
+              autocomplete="off"
+              placeholder="Найти скрипт, автора или задачу…"
+              aria-label="Поиск по каталогу"
+            /><button
+              id="clear"
+              class="clear hidden"
+              aria-label="Очистить поиск"
+            >
+              ×
+            </button>
+          </div>
+          <select id="sort" aria-label="Сортировка">
+            <option value="name">По названию · А → Я</option>
+            <option value="author">По автору · А → Я</option>
+          </select>
+        </div>
+        <div class="reviewbar" id="reviewControls">
+          <span class="progress" id="progress"></span
+          ><select id="reviewFilter" aria-label="Фильтр просмотренных">
+            <option value="all">Все записи</option>
+            <option value="new">Не просмотрено</option>
+            <option value="seen">Просмотрено</option></select
+          ><select id="mediaFilter" aria-label="Фильтр изображений">
+            <option value="all">С фото и без</option>
+            <option value="yes">С изображениями</option>
+            <option value="no">Без изображений</option></select
+          ><button class="action" id="exportProgress">Сохранить отметки</button
+          ><button class="action" id="importProgress">Загрузить отметки</button
+          ><input
+            type="file"
+            id="progressFile"
+            accept="application/json,.json"
+            class="hidden"
+          />
+        </div>
+        <div class="body-grid">
+          <aside>
+            <p class="aside-label">Категории</p>
+            <div id="filters" class="filters"></div>
+            <div class="sidebar-progress">
+              <span id="sideProgress"></span>
+              <div class="progress-track">
+                <div id="progressFill" class="progress-fill"></div>
+              </div>
+            </div>
+            <div class="side-note">
+              Каждая тема представлена один раз. Страницы и сообщения одной темы
+              объединены.<br /><br />Картинки загружаются по мере просмотра.
+              Отметки хранятся на этом устройстве. Перед переносом файла или
+              очисткой браузера сохраните их резервную копию.
+            </div>
+          </aside>
+          <section aria-label="Результаты">
+            <div class="result-top">
+              <span id="resultCount" role="status" aria-live="polite"></span
+              ><span id="resultHint">Ссылки открываются в новой вкладке ↗</span>
+            </div>
+            <div id="notice" class="notice"></div>
+            <div id="results" class="grid"></div>
+            <button class="more hidden" id="more">Показать ещё</button>
+          </section>
+        </div>
+      </div>
+      <noscript
+        ><p>
+          Для поиска и отображения каталога включите JavaScript в браузере.
+        </p></noscript
+      >
+    </main>
+    <footer>
+      <div class="wrap">
+        <div>
+          Источник: экспорт Telegram · messages.html · Scripts / JSFX /
+          Extensions.<br />Названия и профили сверены с форумом. Описания
+          написаны заново. Изображения из форума и GitHub, ссылки на источники
+          сохранены. Доступные версии и установку уточняйте у разработчиков.
+        </div>
+        <span id="snapshotDate">Каталог REAPER</span>
+      </div>
+    </footer>
+    <dialog id="postDialog" aria-labelledby="postTitle">
+      <div class="dialog-head">
+        <h2 id="postTitle"></h2>
+        <button
+          class="dialog-close"
+          data-close="postDialog"
+          aria-label="Закрыть текст"
+        >
+          ×
+        </button>
+      </div>
+      <div class="dialog-body">
+        <p>
+          Новая редакционная версия. Текст можно изменить перед копированием;
+          изменения в этом окне не сохраняются после закрытия страницы.
+        </p>
+        <textarea
+          id="postText"
+          aria-label="Текст для публикации"
+          spellcheck="true"
+        ></textarea>
+        <div class="dialog-actions">
+          <button class="action accent" id="copyText">Копировать текст</button
+          ><button class="action" id="downloadText">↓ Скачать TXT</button>
+        </div>
+      </div>
+    </dialog>
+    <dialog id="imageDialog" class="image-dialog" aria-labelledby="imageTitle">
+      <div class="dialog-head">
+        <h2 id="imageTitle"></h2>
+        <button
+          class="dialog-close"
+          data-close="imageDialog"
+          aria-label="Закрыть изображение"
+        >
+          ×
+        </button>
+      </div>
+      <div class="dialog-body">
+        <img id="fullImage" class="full-image" alt="" />
+        <div class="image-meta" id="imageMeta"></div>
+        <div class="dialog-actions">
+          <button
+            class="action"
+            id="imagePrev"
+            aria-label="Предыдущее изображение"
+          >
+            ←</button
+          ><span id="imagePosition" class="action"></span
+          ><button
+            class="action"
+            id="imageNext"
+            aria-label="Следующее изображение"
+          >
+            →</button
+          ><button class="action accent" id="downloadFullImage">
+            ↓ Скачать PNG
+          </button>
+          <a
+            class="action hidden"
+            id="openFullImage"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Открыть PNG в браузере ↗</a
+          >
+        </div>
+      </div>
+    </dialog>
+    <dialog id="progressDialog" aria-labelledby="progressTitle">
+      <div class="dialog-head">
+        <h2 id="progressTitle"></h2>
+        <button
+          class="dialog-close"
+          data-close="progressDialog"
+          aria-label="Закрыть"
+        >
+          ×
+        </button>
+      </div>
+      <div class="dialog-body">
+        <textarea
+          id="progressText"
+          aria-label="Резервная копия JSON"
+          spellcheck="false"
+        ></textarea>
+        <div class="dialog-actions">
+          <button class="action accent" id="saveProgressFile">
+            ↓ Скачать JSON
+          </button>
+          <button class="action" id="copyProgress">Копировать JSON</button>
+          <button class="action accent" id="pasteProgress">
+            Импортировать JSON
+          </button>
+          <button class="action" id="pickProgressFile">Выбрать файл</button>
+        </div>
+      </div>
+    </dialog>
+    <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
